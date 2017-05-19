@@ -1,0 +1,88 @@
+systems
+power (source, storage, heat?)
+propulsion (tracks, wheels, hover, flight)
+storage (scrap, matter, energy, inventory)
+weapons (melee?, explosive (bomb, rocket, launcher, teleporter), kinetic (scrap, gun, rail, cannon, launcher), electric (ion, burst, beam, laser, pulse, ion))
+drones (defense, boarding, exploding)
+shielding
+defense
+cloaking
+teleporter
+sensors/scanners
+recycler
+repair
+fabricator/printer
+
+components
+cable (carries both power and data, electric, aluminium, copper, light, glass fibre)
+pipe (carries matter, material, scrap, ...)
+bulkhead, casing, strut, ...
+motor
+generator
+transmitter
+receiver
+processor
+memory
+screen
+terminal
+accelerator
+
+materials
+scrap, wire, ceramics, ...
+
+rendering
+    tree broadening
+    beam tracing
+    adaptive beam tracing
+    reprojection
+
+collision
+    parallel collision detection
+    broad phase CPU
+    narrow phase GPU
+
+generation
+    take list of voxels to generate
+    load voxels from network/disk/ram/generate
+    parallel voxel generation
+    parallel RLE tree building
+    random cache replacement
+
+python keyboard, mouse, network, game, audio, video
+gpu rendering, collision, generation
+
+servers = [
+    {
+        name = "corespace 0",
+        host = "corespace.io/corespace0",
+    },
+    {
+        name = "community server",
+        host = "192.168.0.1",
+    },
+    {
+        name = "local singleplayer",
+        host = "127.0.0.1",
+    },
+]
+
+options = {
+    user = "steamcommunity/id/...",
+    input = {
+        look_method = {"mouse", "controller", "head tracking", "custom"},
+        move_method = {"keyboard", "controller", "body tracking", "custom"},
+        action_method = {"mouse", "keyboard", "controller", "joystick", "custom"},
+        bindings = loadfile("bindings")
+    },
+    audio = {
+        output = {"speakers", "headphones"},
+        music = 0.5,
+        sound = 0.5,
+    },
+    video = {
+        output = {"monitor", "vive", "rift"},
+        width = 1920,
+        height = 1200,
+        vsync = 1,
+    }
+}
