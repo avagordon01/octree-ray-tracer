@@ -85,6 +85,9 @@ void traverse() {
     maybe this is fixed with clever keeping track of the iteration count for each face
     if iteration count is just the number of steps from their first face, then it is ok
     also need to traverse from the corner outwards somehow? z order would work, so long as the corner is at the origin
+    or just loop over the neighbour faces outwards from the corner
+    could still pass the stack around by going neighbour to neighbour?
+    going in z order would be great for passing the stack around, perfect even, but we dont have a fast method for getting the mesh faces from a xyz position
     with occlusion, its not perfect, you could have overlapping triangles but if they are rendered at the correct depth it doesnt matter
     also it doesnt matter because rendering half a face or the whole face makes no difference to the processing
     if (nodes[node].data != 0) {
