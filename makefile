@@ -6,3 +6,8 @@ bin/build: src/build.c src/file.h
 	clang -o $@ $< -O3 -lm
 bin/convert: src/convert.c
 	clang -o $@ $< -O3 -lm
+
+clean:
+	git clean -Xfd
+
+.PHONY: all clean
