@@ -1,5 +1,3 @@
-#include <math.h>
-
 struct vector {
     float x[4];
 };

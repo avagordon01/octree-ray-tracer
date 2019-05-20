@@ -1,4 +1,4 @@
-layout(local_size_x = 8, local_size_y = 8) in;
+layout(local_size_x = 16, local_size_y = 16) in;
 
 vec2 aligned_ray_cube_intersect(vec3 rp, vec3 rd, ivec3 pos, float size) {
     vec3 t0 = (pos - rp) / rd;
@@ -32,12 +32,13 @@ vec4 raycast(vec3 rp, vec3 rd, vec3 cp, mat3 cd) {
             pos = ivec3(rp + rd * (ti.x + 0.25));
         }
     } else {
-        return vec4(0);
+        return vec4(1);
     }
     uint level = maxlevel;
     node stack[maxlevel + 1];
     stack[maxlevel] = nodes[0];
-    for (uint i = 0; i < maxiter; i++) {
+    int i;
+    for (i = 0;i < maxiter;i++) {
         while (stack[level].offset != -1) {
             stack[--level] = nodes[stack[level + 1].offset
                 + uint(dot((pos >> (tree_num * level + 0)) & ivec3(1), ivec3(1, 2, 4)))
@@ -47,7 +48,13 @@ vec4 raycast(vec3 rp, vec3 rd, vec3 cp, mat3 cd) {
         }
         pos = (pos >> (tree_num * level)) << (tree_num * level);
         if (stack[level].data != 0) {
-            return vec4(i) / maxiter;
+            return vec4(1) - vec4(i) / maxiter;
+            /*return vec4(
+                float((stack[level].data >> 0 ) & 255) / 256 * 2 - 1,
+                float((stack[level].data >> 8 ) & 255) / 256 * 2 - 1,
+                float((stack[level].data >> 16) & 255) / 256 * 2 - 1,
+                1
+            );*/
         }
         uvec3 dpos = uvec3(pos);
         fpos = rp + rd * (aligned_ray_cube_intersect(rp, rd, pos, pow(cellsize, level)).y + 0.01) + 0.001 * sign(rd);
@@ -55,18 +62,21 @@ vec4 raycast(vec3 rp, vec3 rd, vec3 cp, mat3 cd) {
         dpos ^= uvec3(pos);
         level = findMSB(dpos.x | dpos.y | dpos.z) / tree_num + 1;
         if (level > maxlevel) {
-            return vec4(i) / maxiter;
+            return vec4(1) - vec4(i) / maxiter;
+            //return vec4(1);
         }
     }
-    return vec4(0);
+    return vec4(1);
 };
 
 void main() {
     uvec2 screen_pos = gl_GlobalInvocationID.xy;
-    image[screen_pos.x + screen_pos.y * int(screen.x)] = raycast(
-        camera_pos.xyz,
-        mat3(camera_dir) * vec3((screen_pos.xy + vec2(0.5) - screen.xy / 2) / screen.xx, 1),
-        scene_pos.xyz,
-        mat3(scene_dir)
-    );
+    if (screen_pos.x < screen.x && screen_pos.y < screen.y) {
+        image[screen_pos.x + screen_pos.y * int(screen.x)] = raycast(
+            camera_pos.xyz,
+            mat3(camera_dir) * vec3((screen_pos.xy + vec2(0.5) - screen.xy / 2) / screen.xx, 1),
+            scene_pos.xyz,
+            mat3(scene_dir)
+        );
+    }
 }
